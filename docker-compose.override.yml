@@ -1,0 +1,15 @@
+version: "2.1"
+services:
+  php:
+    ports:
+      - "20000:80"
+# Utile pour se loguer à l'appli en remote
+#    extra_hosts:
+#      - "api-resadec-recette.decitre.fr:192.168.240.130"
+
+  blackfire:
+    environment:
+      - BLACKFIRE_SERVER_ID=fake-0d9ec8dd-3f4e-4bc6-9813-b1ebc725fabf
+      - BLACKFIRE_SERVER_TOKEN=fake-b80bae792f6f27ae51b5eee74a33546996dc6f05ca1b8b847e49a0b9a99d7877
+      - BLACKFIRE_CLIENT_ID=fake-a751e588-bt9-49e4-8aaf-0a5a8200b0b8
+      - BLACKFIRE_CLIENT_TOKEN=fake-f746c7r176f14713495bb468aa51c5f2e6517fc0cf55a613f8bd1e667e844d4

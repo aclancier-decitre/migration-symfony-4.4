@@ -1,0 +1,29 @@
+{% extends "DecitreB2bBundle::base.html.twig" %}
+
+{% block title %} Correction d'une livraison  {% endblock %}
+
+{% block body %}
+
+
+    {% include "DecitreCoreBundle:_common:messages.html.twig" with {'messages': messages} %}
+
+    <form method="GET" action="{{ path('decitre_b2b_correction_livraison')}}">
+        <div class="col-12 form-group">
+            <div class="row">
+                <div class="col-12 col-sm-10">
+                    <div class="form-group">
+                        <input value="{{ deliveryId }}" name="deliveryId" class="form-control" placeholder="Numéro du bon de livraison" type="number" step="1" min="0">
+                    </div>
+                </div>
+                <div class="col-12 col-sm-2">
+                    <button id="products-b2b-button" class="dct-button dct-button-search btn-block">Rechercher</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% if delivery %}
+        {% include "DecitreB2bBundle:CorrectionLivraison:products-table.html.twig" %}
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,6 @@
+ekino_new_relic:
+    enabled: "%new_relic_enabled%"
+    application_name: '%new_relic_appname%'
+    log_exceptions: true                 # If true, sends exceptions to New Relic
+    log_commands: true                    # If true, logs CLI commands to New Relic as Background jobs (>2.3 only)
+

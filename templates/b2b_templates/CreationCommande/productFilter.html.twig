@@ -1,0 +1,56 @@
+<div class="row">
+    <div class="col-12 col-sm-6">
+        <button id="recept-product-button" class="dct-button dct-button-filter btn-recept btn-block-xs-only">
+            Afficher seulement les produits réceptionnés
+        </button>
+    </div>
+
+    <div class="col-sm-6 page-buttons">
+        <span class="product-page"></span>
+        <button id="previous-product-button" class="dct-button dct-button-previous" disabled="disabled">Précedent</button>
+        <button id="next-product-button" class="dct-button dct-button-next" disabled="disabled">Suivant</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-4 codes-familles">
+        <div class="form-group">
+            <select class="form-control" id="month-filter">
+                <option value="" selected>Selectionner le mois *</option>
+                <option value="1">Janvier</option>
+                <option value="2">Février</option>
+                <option value="3">Mars</option>
+                <option value="4">Avril</option>
+                <option value="5">Mai</option>
+                <option value="6">Juin</option>
+                <option value="7">Juillet</option>
+                <option value="8">Août</option>
+                <option value="9">Septembre</option>
+                <option value="10">Octobre</option>
+                <option value="11">Novembre</option>
+                <option value="12">Decembre</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-sm-3 semaine_de_annee">
+        <div class="input-group">
+            <input type="number"
+                   min="1"
+                   max="52"
+                   id="week-filter"
+                   class="form-control"
+                   placeholder="N° Semaine">
+        </div>
+    </div>
+
+    <div class="col-sm-3 codes-operateurs my-3 my-md-0">
+        <div class="input-group">
+            <input id="cdfam-filter" class="form-control" placeholder="Code Famille">
+        </div>
+    </div>
+
+    <div class="col-sm-2">
+        <button id="products-b2b-button" class="dct-button dct-button-search">Rechercher</button>
+    </div>
+</div>

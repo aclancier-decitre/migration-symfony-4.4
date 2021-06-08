@@ -1,0 +1,35 @@
+{% extends "DecitreB2bBundle::base.html.twig" %}
+
+{% block title %} Chorus - Correction facture ou avoir  {% endblock %}
+
+{% block body %}
+
+    {% include "DecitreCoreBundle:_common:messages.html.twig" with {'messages': messages} %}
+
+    <form method="GET" action="{{ path('decitre_b2b_correction_document_chorus')}}">
+        <div class="col-12 form-group">
+            <div class="row">
+                <div class="col-12 col-sm-10">
+                    <div class="form-group">
+                        <input value="{{ chorusDocumentId }}"
+                               name="chorusDocumentId"
+                               class="form-control"
+                               placeholder="Numéro de facture ou d'avoir" type="text">
+                    </div>
+                </div>
+                <div class="col-12 col-sm-2">
+                    <button id="products-b2b-button" class="dct-button dct-button-search btn-block">Rechercher</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% if chorusForm is not null %}
+
+        <p>Type de document : <strong>{{ chorusDocument.typeDoc }}</strong></p>
+
+        {{ form(chorusForm) }}
+
+    {% endif %}
+
+{% endblock %}

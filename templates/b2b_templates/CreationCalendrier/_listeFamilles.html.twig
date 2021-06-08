@@ -1,0 +1,16 @@
+{% for famille in calendrier.famillesAssignees %}
+    {% if loop.index == amountToDisplay + 1 %}
+        <div class="show-more-familles dct-button dct-button-more">
+            Afficher tout
+        </div>
+        <div class="overflow d-none">
+    {% endif %}
+
+    {% if showAsLabel %}<span class="badge badge-primary mx-1">{% endif %}
+        {{ famille.code }} - {{ famille.libelle }} <br>
+    {% if showAsLabel %}</span>{% endif %}
+
+    {% if loop.length >= amountToDisplay + 1 and loop.last %}
+        </div>
+    {% endif %}
+{% endfor %}

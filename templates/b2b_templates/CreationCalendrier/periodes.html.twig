@@ -1,0 +1,131 @@
+{% extends "DecitreB2bBundle::base.html.twig" %}
+
+{% block title %}
+    {{ calendrier.libelle }} - Client {{ client.nom }} ({{ client.id }})
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <h4>Codes familles associés</h4>
+            <div class="familles mb-3">
+                {% include '@DecitreB2b/CreationCalendrier/_listeFamilles.html.twig' with {
+                    'showAsLabel' : true,
+                    'amountToDisplay' : 8
+                } %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            {% if app.session.flashBag.has('success') %}
+                <div class="alert alert-success">
+                    {% for msg in app.session.flashBag.get('success') %}
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if calendrier.periodes is empty %}
+                <div class="alert alert-info">
+                    Aucune période n'est définie pour cet office. Cliquez sur le bouton ci-dessous pour ajouter la
+                    première !
+                </div>
+            {% else %}
+
+                <table class="dct-table dct-table-striped">
+                    <thead>
+                    <tr>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Numéro de commande</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for periode in calendrier.periodes %}
+                        <tr>
+                            <td>
+                                {{ periode.dateDebut|date('d/m/Y') }}
+                            </td>
+                            <td>
+                                {{ periode.dateFin|date('d/m/Y') }}
+                            </td>
+                            <td>
+                                {{ periode.numeroCommande }}
+                            </td>
+                            <td>
+                                <button type="button"
+                                        class="dct-button dct-button-edit edit-periode dct-button-icon-only"
+                                        data-toggle="modal"
+                                        data-target="#modal-edit-periode"
+                                        data-date-debut="{{ periode.dateDebut|date('Y-m-d') }}"
+                                        data-date-fin="{{ periode.dateFin|date('Y-m-d') }}"
+                                        data-numero-commande="{{ periode.numeroCommande }}"
+                                        data-periode-id="{{ periode.id }}"
+                                        data-client-id="{{ client.id }}"
+                                        data-libelle="{{ calendrier.libelle }}">
+                                </button>
+
+                                {% if periode.numeroCommande is defined and periode.numeroCommande == 0 %}
+                                    <form action="{{ path('decitre_b2b_calendriers_delete_periode', {
+                                        'clientId' : client.id,
+                                        'libelle' : calendrier.libelle,
+                                        'periodeId' : periode.id
+                                    }) }}" method="post" class="delete"
+                                          onsubmit="return confirm('Souhaitez vous supprimer la période ?');">
+                                        <input type="hidden" name="_method" value="DELETE"/>
+                                        <button type="submit"
+                                                class="dct-button dct-button-delete dct-button-icon-only delete">
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <a href="{{ path('decitre_b2b_calendriers_show_offices', { 'clientId' : client.id }) }}"
+               class="dct-button dct-button-back">
+                Retour
+            </a>
+
+            <button type="button"
+                    class="dct-button dct-button-create edit-periode"
+                    data-toggle="modal"
+                    data-target="#modal-edit-periode"
+                    data-client-id="{{ client.id }}"
+                    data-libelle="{{ calendrier.libelle }}">
+                Ajouter une période
+            </button>
+        </div>
+    </div>
+
+    <!-- Modale de modification ou d'ajout des périodes -->
+    {% include '@DecitreB2b/CreationCalendrier/_modal.html.twig' with {
+        'name' : 'Période',
+        'form' : form,
+        'id' : 'modal-edit-periode',
+        'action' : path('decitre_b2b_calendriers_save_periodes', { clientId : client.id, libelle: calendrier.libelle }),
+        'successCallback' : 'success-edit-periode'
+    } only %}
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function () {
+            gestCalendrier.functions.editPeriodes();
+        });
+    </script>
+{% endblock %}

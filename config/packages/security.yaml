@@ -1,0 +1,108 @@
+#security:
+#    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+#    providers:
+#        users_in_memory: { memory: null }
+#    firewalls:
+#        dev:
+#            pattern: ^/(_(profiler|wdt)|css|images|js)/
+#            security: false
+#        main:
+#            anonymous: lazy
+#            provider: users_in_memory
+#
+#            # activate different ways to authenticate
+#            # https://symfony.com/doc/current/security.html#firewalls-authentication
+#
+#            # https://symfony.com/doc/current/security/impersonating_user.html
+#            # switch_user: true
+#
+#    # Easy way to control access for large sections of your site
+#    # Note: Only the *first* access control that matches will be used
+#    access_control:
+#        # - { path: ^/admin, roles: ROLE_ADMIN }
+#        # - { path: ^/profile, roles: ROLE_USER }
+
+
+security:
+    encoders:
+        Decitre\CoreBundle\Entity\User: plaintext
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_RESADEC: ROLE_USER
+        ROLE_ACHAT: ROLE_RESADEC
+        ROLE_B2B: ROLE_RESADEC
+        ROLE_EQUIPEMENT: ROLE_RESADEC
+        ROLE_REQUETES_UTILISATEURS: ROLE_RESADEC
+        ROLE_DEVELOPPEUR:
+            - ROLE_RESADEC
+            - ROLE_CADRE_MAGASIN
+            - ROLE_SERVICE_CLIENTS
+            - ROLE_ACCES_CORRECTION_CONTENUS
+            - ROLE_ACCES_LTS
+            - ROLE_ANONYMISATION
+
+#    providers:
+#        user:
+#            id : core.user.provider
+    providers:
+        users_in_memory: { memory: null }
+
+    firewalls:
+        api_livres:
+            pattern: ^/reprise\/api\/livre\/.*
+            anonymous: true
+            stateless: true
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        secured_area:
+            pattern:   ^/
+            anonymous: ~
+            logout: ~
+            # simple_form:
+                # authenticator: authenticator
+                # login_path: login
+                # check_path: login_check
+
+#    access_control:
+#        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/password$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/reprise.*, allow_if: 'false' }
+#        - { path: ^/reprise\/api\/livre\/.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/resadec\/achats\/reassort_scolaire*, role: ROLE_ACCES_LTS }
+#        - { path: ^/resadec\/achats\/*, role: ROLE_ACHAT }
+#        - { path: ^/user_query\/*, role: ROLE_REQUETES_UTILISATEURS}
+#        - { path: ^/serviceclients\/anonymiser-client\/*, role: ROLE_ANONYMISATION }
+#        - { path: ^/clients\/.*\/staff-borrowing\/*, role: ROLE_CADRE_MAGASIN }
+#        - { path: ^/serviceclients\/chercher-client$, role: ROLE_CLI_CONSULTATION }
+#        - { path: ^/serviceclients\/client\/[0-9]+$, role: ROLE_CLI_CONSULTATION }
+#        - { path: ^/serviceclients\/*, role: ROLE_SERVICE_CLIENTS }
+#        - { path: ^/relais/*, role: ROLE_SERVICE_CLIENTS }
+#        - { path: ^/comptabilite\/*, role: ROLE_RECLAMATION }
+#        - { path: ^/marketing\/*, role: ROLE_MARKETING }
+#        - { path: ^/magasin\/horaires\/*, role: ROLE_CADRE_MAGASIN }
+#        - { path: ^/b2b\/*, role: ROLE_B2B }
+#        - { path: ^/b2b\/calendriers\/*, role: ROLE_B2B_OFFICE }
+#        - { path: ^/resadec\/*, role: ROLE_RESADEC }
+#        - { path: ^/prisme\/*, role: ROLE_LOGISTIQUE }
+#        - { path: ^/numerisation/content_correction, role: ROLE_ACCES_CORRECTION_CONTENUS }
+#        - { path: ^/numerisation/image, role: ROLE_PUSH_IMG_PIM }
+#        - { path: ^/magasin\/inventaire\/*, role: ROLE_GESTION_INVENTAIRE }
+#        - { path: ^/clients/[0-9]+/vouchers$, role: ROLE_BONS_ACHAT_FID_GESTION }
+#        - { path: ^/clients/[0-9]+/card, role: ROLE_BONS_ACHAT_FID_GESTION }
+#        - { path: ^/clients\/*, role: ROLE_CLI_CONSULTATION }
+#        - { path: ^/clients\/\[0-9]+$, role: ROLE_CLI_CONSULTATION }
+#        - { path: ^/clients\/new$, role: ROLE_CLIMAJPART }
+#        - { path: ^/gift-cards\/*, role: ROLE_CLICHQCADEAU }
+#        - { path: ^/clients/.*lock, role: ROLE_CLIABLOQUE }
+#        - { path: ^/clients/.*confirm-lock, role: ROLE_CLIABLOQUE }
+#        - { path: ^/clients/.*unlock, role: ROLE_CLIABLOQUE }
+#        - { path: ^/clients/.*confirm-unlock, role: ROLE_CLIABLOQUE }
+#        - { path: ^/stock/(history|current|recap|destock|orders), role: ROLE_STOCK_CONSULTATION }
+#        - { path: ^/stock/old/*, role: ROLE_STOCKOBSOLETE }
+#        - { path: ^/orders/new, role: ROLE_DEVELOPPEUR }
+#        - { path: ^/orders/[0-9]+/*, role: ROLE_DEVELOPPEUR }
+#        - { path: ^/orders/, role: ROLE_ACCES_COMMANDE }
+#        - { path: ^/, role: ROLE_USER }

@@ -1,0 +1,12 @@
+{% extends "DecitreB2bBundle::base.html.twig" %}
+
+{% block title %}<a href="{{  url('decitre_b2b_select_app') }}">Office B2B</a> {% endblock %}
+
+{% block body %}
+
+    <div class="site-selection">
+        <a class="dct-button dct-button-create" href="{{ url('decitre_b2b_creation_commande_office') }}">Créer une commande</a>
+        <a class="dct-button" href="{{ url('decitre_b2b_correction_livraison') }}">Correction d'une livraison</a>
+    </div>
+
+{% endblock %}

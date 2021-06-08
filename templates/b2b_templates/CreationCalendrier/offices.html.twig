@@ -1,0 +1,97 @@
+{% extends "DecitreB2bBundle::base.html.twig" %}
+
+{% block title %} Offices pour le client {{ client.nom }} ({{ client.id }}){% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <table class="dct-table dct-table-striped">
+                <thead>
+                <tr>
+                    <th>Libellé</th>
+                    <th>Familles associées</th>
+                    <th>Périodes</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for calendrier in calendriers %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('decitre_b2b_calendriers_show_periodes', {
+                                'libelle' : calendrier.libelle,
+                                'clientId' : client.id
+                            }) }}">
+                                {{ calendrier.libelle }}
+                            </a>
+                        </td>
+                        <td>
+                            {% include '@DecitreB2b/CreationCalendrier/_listeFamilles.html.twig' with {
+                                'showAsLabel' : false,
+                                'amountToDisplay' : 10
+                            } %}
+                        </td>
+                        <td>
+                            {{ calendrier.periodes|length }}
+                        </td>
+                        <td>
+                            <button type="button"
+                                    class="dct-button dct-button-edit edit-office dct-button-icon-only"
+                                    data-toggle="modal"
+                                    data-target="#modal-edit-office"
+                                    data-libelle="{{ calendrier.libelle }}"
+                                    data-familles="{{ calendrier.getCodesFamillesAssignees|json_encode }}"
+                                    data-mode="edit"
+                                    data-client-id="{{ client.id }}">
+                            </button>
+                            {% if calendrier.libelle is defined and calendrier.libelle is not empty %}
+                                <form action="{{ path('decitre_b2b_calendriers_delete_office', {
+                                    'clientId' : client.id,
+                                    'libelle' : calendrier.libelle
+                                }) }}" method="post" class="delete"
+                                      onsubmit="return confirm('Souhaitez vous supprimer cet office ?');">
+                                    <input type="hidden" name="_method" value="DELETE"/>
+                                    <button type="submit"
+                                            class="dct-button dct-button-delete delete dct-button-icon-only">
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <button type="button"
+                    class="dct-button dct-button-create edit-office"
+                    data-toggle="modal"
+                    data-target="#modal-edit-office"
+                    data-client-id="{{ client.id }}"
+                    data-mode="create">
+                Ajouter un office
+            </button>
+
+        </div>
+    </div>
+
+    <!-- Modale de modification ou d'ajout d'un office -->
+    {% include '@DecitreB2b/CreationCalendrier/_modal.html.twig' with {
+        'name' : 'Office',
+        'form' : form,
+        'action' : path('decitre_b2b_calendrier_save_office', { clientId : client.id }),
+        'id' : 'modal-edit-office',
+        'successCallback' : 'success-edit-office'
+    } only %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function () {
+            gestCalendrier.functions.editOffices();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,42 @@
+version: "2.1"
+services:
+  php:
+    build:
+      context: ./docker/conf/php
+      args:
+        uid: "${CURRENT_UID:-1001}"
+        gid: "${CURRENT_GID:-1001}"
+    volumes:
+      - ./:/var/www/html
+    links:
+      - database
+      - blackfire
+
+  cli:
+    build:
+      context: ./docker/conf/cli
+      args:
+        uid: "${CURRENT_UID:-1001}"
+        gid: "${CURRENT_GID:-1001}"
+    user: localUser
+    volumes:
+      - ./:/var/www/html
+      - ./docker/data/composer:/home/localUser/.composer
+    links:
+      - database
+    working_dir: /var/www/html
+    command: "false"
+
+  database:
+    build:
+      context: ./docker/conf/percona
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: appli_mag
+      MYSQL_PASSWORD: appli_mag
+      MYSQL_DATABASE: appli_mag
+    volumes:
+      - ./docker/data/mysql:/var/lib/mysql
+
+  blackfire:
+    image: blackfire/blackfire

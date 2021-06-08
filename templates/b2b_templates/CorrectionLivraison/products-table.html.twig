@@ -1,0 +1,20 @@
+{{ form_start(deliveryForm) }}
+<table class="datatable-search result-table-display" data-search-focus="true" data-clear-search-input="true">
+    <thead>
+        <tr>
+            <th>Code produit</th>
+            <th>Titre</th>
+            <th>Quantité</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for product in deliveryForm.products %}
+        <tr>
+            <td class="col-sm-1 col-md-1 col-lg-1 ">{{ delivery.products[loop.index0].getProductCode() }}</td>
+            <td class="col-sm-8 col-md-8 col-lg-8">{{ delivery.products[loop.index0].getProductTitle() }}</td>
+            <td class="col-sm-1 col-md-1 col-lg-1">{{ form_widget(product.deliveredQuantity) }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ form_end(deliveryForm) }}

@@ -1,0 +1,15 @@
+#twig:composer create-project symfony/website-skeleton:"^4.4" migration-symfony-4-4
+#    default_path: '%kernel.project_dir%/templates'
+#    debug: '%kernel.debug%'
+#    strict_variables: '%kernel.debug%'
+#    exception_controller: null
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    globals:
+        ga_enabled: '%ga_enabled%'
+        ga_ua: '%ga_ua%'
+    form_themes:
+        - 'bootstrap_4_layout.html.twig'
+        - 'DecitreCoreBundle:_form:fields.html.twig'
