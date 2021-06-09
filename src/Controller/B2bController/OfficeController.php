@@ -33,6 +33,7 @@ class OfficeController extends AbstractController
      * @Route("/creation-commande", name="decitre_b2b_creation_commande_office")
      * @param OfficeWebService $officeWebService
      * @return Response
+     * @throws Exception
      */
     public function indexAction(OfficeWebService $officeWebService)
     {

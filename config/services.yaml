@@ -60,4 +60,3 @@ services:
     App\Entity\B2bEntity\FamilleFactory: ~
     App\Entity\B2bEntity\PeriodeFactory: ~
     App\Entity\CoreEntity\MappingFactory: ~
-

@@ -1,0 +1,20 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}Récupération d'infos produit depuis decitre.fr{% endblock %}
+
+{% block body %}
+    <div class="b2c--product-search">
+        {{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
+        {{ form_errors(form.url) }}
+        {{ form_widget(form.url, {
+            'attr': {
+                'class': 'form-control input--url',
+                'placeholder' : 'URL'
+            }
+        }) }}
+        <button type="submit" class="dct-button dct-button-search mb-2 mx-2">
+            Rechercher
+        </button>
+        {{ form_rest(form) }}
+    </div>
+{% endblock %}
