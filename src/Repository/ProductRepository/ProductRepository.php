@@ -2,16 +2,16 @@
 
 namespace App\Repository\ProductRepository;
 
-use App\Services\SolrService;
-use App\Services\Tools\DatabaseDateHelper;
-use App\Services\Exception\DatabaseException;
-use App\Services\Exception\DatabaseActionException;
+use App\Service\SolrService;
+use App\Service\Tools\DatabaseDateHelper;
+use App\Service\Exception\DatabaseException;
+use App\Service\Exception\DatabaseActionException;
 use App\Entity\ProductEntity\DonneesProduitLn;
 use App\Entity\ProductEntity\Produit;
 use App\Repository\ProductRepository\AuthorRepository;
 use App\Repository\ProductRepository\PublisherRepository;
 use App\Entity\ProductEntity\Product;
-use App\Services\Factory\ProductFactory;
+use App\Service\Factory\ProductFactory;
 use App\Entity\ProductEntity\ProductType;
 
 use Doctrine\DBAL\Exception;

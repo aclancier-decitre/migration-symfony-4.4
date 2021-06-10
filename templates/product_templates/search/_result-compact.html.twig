@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col">
+        {% if paginator %}
+            <div class="row mb-3">
+                <div class="col-12 col-md-2">
+                    {% include '@DecitreCore/pagination/results-count.html.twig' with {
+                        'data': productSearchResults,
+                        'paginator': paginator
+                    } %}
+                </div>
+
+                <div class="col-12 col-md-9 d-flex">
+                    {% include '@DecitreCore/pagination/navigation.html.twig' with {
+                        'paginator': paginator
+                    } %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="display-product-search-filters-container">
+    <button class="btn display-product-search-filters dct-icon-open-side-nave dct-button-icon-only rounded p-2 shadow-sm"
+            title="Afficher filtres"></button>
+</div>
+
+<div class="row mt-2">
+    <div class="col-md-4 col-xl-3 product-search-filters-container d-none">
+        <div class="product-search-filters p-3">
+            <h5 class="d-flex align-items-center pb-3">
+                <small><i class="dct-icon-sort mr-2"></i></small> Trier les résultats
+            </h5>
+
+            {% include '@DecitreProduct/search/_order-by.html.twig' %}
+
+            <h5 class="d-flex align-items-center pb-3 mt-3">
+                <small><i class="dct-icon-filter mr-2"></i></small> Filtres
+            </h5>
+            {% include '@DecitreProduct/search/_facets.html.twig' %}
+            {% include '@DecitreProduct/search/_price-filter.html.twig' %}
+        </div>
+    </div>
+    <div class="col-md-12 col-xl-12 product-list">
+        {% for product in productSearchResults %}
+            {% include '@DecitreProduct/search/_product.html.twig' %}
+        {% endfor %}
+    </div>
+</div>
+
+{% if productSearchResults|length >= 5 and paginator %}
+    <div class="row">
+        <div class="col-12 d-flex mt-3">
+            {% include '@DecitreCore/pagination/navigation.html.twig' with {
+                'paginator': paginator
+            } %}
+        </div>
+    </div>
+{% endif %}

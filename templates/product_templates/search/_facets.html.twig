@@ -1,0 +1,23 @@
+{% if facets is not empty %}
+    <div class="facets mt-3 pb-3">
+        {% include '@DecitreProduct/search/_facet.html.twig' with {
+            facetTitle : 'Type de produit',
+            facetKey : 'product_type'
+        } %}
+
+        {% include '@DecitreProduct/search/_facet.html.twig' with {
+            facetTitle : 'Format',
+            facetKey : 'product_format'
+        } %}
+
+        {% include '@DecitreProduct/search/_facet.html.twig' with {
+            facetTitle : 'Disponibilité',
+            facetKey : 'availability'
+        } %}
+
+        {% include '@DecitreProduct/search/_facet.html.twig' with {
+            facetTitle : 'Edition langue étrangère',
+            facetKey : 'foreign_language_edition'
+        } %}
+    </div>
+{% endif %}

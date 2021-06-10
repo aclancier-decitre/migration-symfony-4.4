@@ -1,0 +1,19 @@
+<form method="get" id="orderBy" class="mt-3">
+    <div class="row">
+        <div class="d-none d-sm-block col-sm-2">
+            <label for="orderByValue" class="col-form-label text-center">Par</label>
+        </div>
+        <div class="col col-sm-10">
+            <select name="orderByValue" class="form-control {{ app.request.xmlHttpRequest ? 'inside-modal' : '' }}">
+                {% for key, orderByChoice in orderByChoices %}
+                    {% for direction, label in orderByChoice %}
+                        {% set isSelected = app.request.query.get('orderBy') == key and app.request.query.get('orderDirection') == direction %}
+                        <option value="{{ key }}|{{ direction }}" {{ isSelected ? 'selected' : '' }}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</form>

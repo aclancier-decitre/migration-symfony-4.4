@@ -1,0 +1,64 @@
+{{ form_start(form, { 'action' : path('decitre_product_search_index') }) }}
+
+<div class="row">
+    <div class="col-md-2">
+        {{ form_row(form.ean) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.product_title, { 'attr' : {
+            'data-autocomplete-url' : path('decitre_api_product_search_titles', { 'title' : '{title}' })
+        } }) }}
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.published_at.date_debut) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.published_at.date_fin) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        {{ form_row(form.author_name, { 'attr' : {
+            'data-autocomplete-url' : path('decitre_api_author_search_names', { 'name' : '{name}' })
+        } }) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_row(form.publisher_id) }}
+        {{ form_row(form.publisher_name, { 'attr' : {
+            'data-autocomplete-url' : path('decitre_api_publisher_search_names', { 'name' : '{name}' })
+        } }) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_row(form.collection_id) }}
+        {{ form_row(form.collection_name, { 'attr' : {
+            'data-autocomplete-url' : path('decitre_api_collection_search_names', { 'name' : '{name}' })
+        } }) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        {{ form_row(form.family.family) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_row(form.family.sub_family) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_row(form.family.sub_sub_family) }}
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        <button class="dct-button dct-button-search product-search-button" type="submit">
+            Rechercher
+        </button>
+    </div>
+</div>
+
+{{ form_end(form) }}

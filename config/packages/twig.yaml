@@ -12,4 +12,4 @@ twig:
         ga_ua: '%ga_ua%'
     form_themes:
         - 'bootstrap_4_layout.html.twig'
-        - 'DecitreCoreBundle:_form:fields.html.twig'
+#        - 'DecitreCoreBundle:_form:fields.html.twig'

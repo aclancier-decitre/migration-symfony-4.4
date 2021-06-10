@@ -21,6 +21,12 @@ parameters:
     resadec_db_name: resadec
     resadec_db_user: decitre
     resadec_db_password: DecPost.2017
+    solr_ip: 192.168.234.72
+    solr_port: '8983'
+    solr_path: /solr
+    api_orb_host: api.base-orb.fr
+    api_orb_username: apiUsername
+    api_orb_password: apiPassword
     paths_di:
         - "#^/numerisation.*$#"
         - "#^/reprise.*$#"
@@ -49,6 +55,20 @@ services:
     App\Controller\:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
+
+    # explicitly configure the service
+    App\Service\SolrService:
+        arguments:
+            $host: '%solr_ip%'
+            $port: '%solr_port%'
+            $path: '%solr_path%'
+
+    # explicitly configure the service
+    App\Repository\ProductRepository\OrbProductRepository:
+        arguments:
+            $host: '%api_orb_host%'
+            $username: '%api_orb_username%'
+            $apiKey: '%api_orb_password%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -1,0 +1,25 @@
+{% if facets[facetKey] is defined and facets[facetKey] is not empty %}
+    <div class="facet mt-3">
+        <h5 class="mb-2 pb-3">{{ facetTitle }}</h5>
+
+        <ul class="list-group list-group-flush">
+            {% for key, facetData in facets[facetKey] %}
+                {% set isFacetSelected = app.request.query.has(facetKey) %}
+                {% set link = path('decitre_product_search_index', app.request.query.all|merge({
+                    (facetKey) : isFacetSelected ? null : key,
+                    page: 1
+                })) %}
+                {% set facetIconClass = isFacetSelected ? 'dct-icon-minus' : 'dct-icon-plus' %}
+                <li class="list-group-item">
+                    <a href="{{ link }}" class="d-flex justify-content-between align-items-center">
+                        <i class="dct-icon {{ facetIconClass }} mr-3"></i>
+                        {{ facetData.label|capitalize }}
+                        <span class="badge badge-light badge-pill">
+                            {{ facetData.amount }}
+                        </span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

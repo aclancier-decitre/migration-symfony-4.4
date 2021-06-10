@@ -1,0 +1,178 @@
+{% set inStockForCurrentSite = stockByEan[product.ean]['current_user_site'].quantity|default('0') > 0 %}
+
+{% set availabilityClass = 'text-danger' %}
+
+{% if product.availability %}
+    {% if product.availability.shortLabel == 'Disponible' %}
+        {% set availabilityClass = 'text-success' %}
+    {% elseif product.availability.shortLabel == 'A paraître' %}
+        {% set availabilityClass = 'text-warning' %}
+    {% endif %}
+{% endif %}
+{% set orderingForbidden = product.availability and product.availability.isOrderingForbidden %}
+
+{# Lien image miniature #}
+{% if orbData[product.ean]['images']['front']['thumbnail']['src'] is defined %}
+    {% set imageLink = orbData[product.ean]['images']['front']['thumbnail']['src'] %}
+{% else %}
+    {% set imageLink = asset('assets/images/visuel-indisponible.jpg') %}
+{% endif %}
+
+{# Lien vers l'image en taille originale si disponible #}
+{% set originalImageLink = orbData[product.ean]['images']['front']['original']['src'] is defined ? orbData[product.ean]['images']['front']['original']['src'] : null %}
+
+{% set lienFiche = path('decitre_product_fiche', app.request.query.all()|merge({
+    'ean' : product.ean,
+})) %}
+
+<div class="row">
+    <div class="product col my-2">
+        <div class="product-inner d-flex flex-row flex-wrap p-3 py-4">
+            <div class="row flex-fill">
+                {# Image miniature de la couverture et lien vers la version originale #}
+                <div class="col-md-2 text-center">
+                    <span class="d-inline-block picture">
+                        <img src="{{ imageLink }}" class="figure-img img-thumbnail m-0"/>
+                        {% if originalImageLink is not null %}
+                            <a href="{{ originalImageLink }}" target="_blank" class="expand disable-ajax">
+                                <i class="dct-icon-expand"></i>
+                            </a>
+                        {% endif %}
+                    </span>
+                </div>
+
+                {# Colonne Informations #}
+                <div class="col-md-6 col-lg-7">
+                    <h5 class="title my-3 mt-sm-0 mb-lg-1">
+                        {% if lienFiche is defined %}
+                            <a href="{{ lienFiche }}">
+                                {{ product.title|default('Produit sans titre') }}
+                                <span class="small text-muted"> · {{ product.ean }}</span>
+                            </a>
+                        {% else %}
+                            {{ product.title|default('Produit sans titre') }}
+                            <span class="small text-muted"> · {{ product.ean }}</span>
+                        {% endif %}
+                    </h5>
+
+                    {# Auteurs, type et format #}
+                    <div class="authors my-1">
+                        {% if product.authorNames is not empty %}
+                            {% for authorName in product.authorNames %}
+                                {% set searchAuthorNameField = { (form.children['author_name'].vars.full_name) : authorName } %}
+                                <a href="{{ path('decitre_product_search_index', app.request.query.all|merge(searchAuthorNameField)) }}">
+                                    {{ authorName }}
+                                </a>
+                                {% if not loop.last %}·{% endif %}
+                            {% endfor %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                        {{ product.type.label }} {{ product.format.label|default('') }}
+                    </div>
+
+                    {# Informations supplémentaires tel que la date de parution, la collection ou l'éditeur #}
+                    <div class="text-muted">
+                        {{ product.extraInformations|join(' — ') }}
+                    </div>
+
+                    {# Liens avec résumé ORB et informations de stock. Ces liens n'ouvrent pas de nouvelles fenêtres. #}
+                    <div class="links mt-4">
+                        {% if orbData[product.ean]['summary'] is defined %}
+                            <div class="summary mb-3">
+                                <a href="#summary{{ product.ean }}" data-toggle="collapse">
+                                    Lire le résumé
+                                </a>
+                                <div class="collapse mt-2" id="summary{{ product.ean }}">
+                                    <div class="card card-body text-justify">
+                                        {{ orbData[product.ean]['summary'] }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% set quantitiesInStockClass = inStockForCurrentSite ? 'badge-success' : 'badge-secondary' %}
+                        <div class="row stocks">
+                            <div class="col-lg-4 d-flex justify-content-between align-items-center stocks-column">
+                                Stock Magasin
+                                <span class="badge badge-pill {{ quantitiesInStockClass }}">
+                                    {{ stockByEan[product.ean]['current_user_site'].quantity|default('0') }}
+                                </span>
+                            </div>
+                            <div class="col-lg-4 d-flex justify-content-between align-items-center stocks-column">
+                                {% if stockByEan[product.ean] is defined %}
+                                    <a href="#quantitiesInStock{{ product.ean }}" data-toggle="collapse">
+                                        Tous magasins
+                                    </a>
+                                {% else %}
+                                    Tous magasins
+                                {% endif %}
+                                <span class="badge badge-pill {{ stockByEan[product.ean] is defined ? 'badge-primary' : 'badge-secondary' }}">
+                                    {{ stockByEan[product.ean]['total']|default(0) }}
+                                </span>
+                            </div>
+
+                            <div class="col-lg-4 d-flex justify-content-between align-items-center stocks-column">
+                                {% set currentOrdersQuantitiesClass = app.request.xmlHttpRequest ? 'display-current-orders-quantities disable-ajax' :
+                                    'open-modal open-modal--ajax-links open-modal--ajax-forms' %}
+                                <a href="{{ path('decitre_product_current_orders_quantities_index', { 'ean' : product.ean }) }}"
+                                   class="{{ currentOrdersQuantitiesClass }}"
+                                   data-result-id="currentOrdersQuantitiesResult{{ product.ean }}">
+                                    Quantités en commande
+                                </a>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <div id="currentOrdersQuantitiesResult{{ product.ean }}" class="d-none"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                {% if stockByEan[product.ean] is defined %}
+                                    <div class="collapse mt-2" id="quantitiesInStock{{ product.ean }}">
+                                        {% include '@DecitreProduct/search/_quantities-in-stock.html.twig' with {
+                                            stockData: stockByEan[product.ean]
+                                        } %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Colonne Actions #}
+
+                <div class="col-md-4 col-lg-3 text-center price-actions
+                    {% if not product.priceIncludingTaxes %}align-self-center{% endif %}">
+
+                    <div class="price mb-2">
+                        {% if product.priceIncludingTaxes %}
+                            {{ product.priceIncludingTaxes|number_format(2, ',') ~ ' €' }}
+                        {% else %}
+                            Prix non défini
+                        {% endif %}
+                    </div>
+
+                    <div class="availability mb-3 {{ availabilityClass }}">
+                        {{ product.availability.label|default('Disponibilité inconnue')|capitalize }}
+                    </div>
+
+                    <a href="{{ path("decitre_stock_history", { "stock_movement_search": {"product":{"ean":product.ean}}}
+                    ) }}"
+                       target="mouvement_stock" class="dct-button dct-button-more mb-2 d-block w-75 mx-auto">Mouvements de Stock</a>
+                    <button class="dct-button d-block w-75 mx-auto select-product"
+                            data-ean="{{ product.ean }}"
+                            data-title="{{ product.title }}"
+                            data-nomauteur="{{ (product.authorNames|first)|default('N/A') }}"
+                            data-nomediteur="{{ product.publisherName }}"
+                            data-nomfournisseur="{{ (product.fournisseur.nom)|default('N./A') }}"
+                    >
+                        Sélectionner
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

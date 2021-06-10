@@ -10,7 +10,7 @@ use App\Entity\B2bEntity\Periode;
 use App\Entity\ClientEntity\Client;
 use Exception;
 use GuzzleHttp\ClientInterface;
-use App\Services\Factory\ProductFactory;
+use App\Service\Factory\ProductFactory;
 use GuzzleHttp\Exception\ClientException;
 
 class OfficeWebService

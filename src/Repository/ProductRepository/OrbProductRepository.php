@@ -8,20 +8,11 @@ class OrbProductRepository
 
     const API_MAX_PRODUCTS = 500;
 
-    /**
-     * @var string
-     */
-    private $host;
+    private string $host;
 
-    /**
-     * @var string
-     */
-    private $username;
+    private string $username;
 
-    /**
-     * @var string
-     */
-    private $apiKey;
+    private string $apiKey;
 
     public function __construct(string $host, string $username, string $apiKey)
     {
@@ -30,20 +21,14 @@ class OrbProductRepository
         $this->apiKey = $apiKey;
     }
 
-    /**
-     * @param string $ean13
-     *
-     * @return array
-     */
-    public function getProduct($ean13)
+
+    public function getProduct(string $ean13): array
     {
         $products = $this->getProducts([$ean13]);
         return array_shift($products);
     }
 
     /**
-     * @param array $ean13
-     *
      * @return mixed
      */
     public function getProducts(array $ean13)
@@ -62,12 +47,7 @@ class OrbProductRepository
         return $products;
     }
 
-    /**
-     * @param array $ean13
-     *
-     * @return array
-     */
-    private function callApi(array $ean13)
+    private function callApi(array $ean13): array
     {
         $context = stream_context_create([
             'http' => [

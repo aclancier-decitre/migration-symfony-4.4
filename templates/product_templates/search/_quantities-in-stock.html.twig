@@ -1,0 +1,16 @@
+<table class="table table-sm m-0 shadow-sm rounded">
+    <thead>
+    <tr>
+        {% for key, stockLine in stockData|filter((v, k) => k is not same as('total')) %}
+            <th class="text-center {{ stockLine.site.code == app.user.site ? 'table-success' }}">{{ stockLine.site.code }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        {% for key, stockLine in stockData|filter((v, k) => k is not same as('total')) %}
+            <td class="text-center {{ stockLine.site.code == app.user.site ? 'table-success' }}">{{ stockLine.quantity }}</td>
+        {% endfor %}
+    </tr>
+    </tbody>
+</table>

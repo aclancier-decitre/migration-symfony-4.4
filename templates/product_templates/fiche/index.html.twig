@@ -1,0 +1,257 @@
+{% extends app.request.xmlHttpRequest ? 'base_modal.html.twig' : 'base.html.twig' %}
+
+{% if donneesOrb['images']['front']['original']['src'] is defined %}
+    {% set imageLink = donneesOrb['images']['front']['original']['src'] %}
+{% else %}
+    {% set imageLink = asset('assets/images/visuel-indisponible-large.jpg') %}
+{% endif %}
+
+{% block body %}
+    <div class="fiche-produit">
+        <div class="row">
+
+            {# Image et liens externes #}
+            <div class="col-lg-3">
+                <div class="row mb-3">
+                    <div class="col">
+                        <a href="{{ path('decitre_product_search_index', app.request.query.all) }}"
+                           class="dct-button dct-button-back btn-block-xs-only">
+                            Retour à la recherche produit
+                        </a>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <img src="{{ imageLink }}"
+                         class="figure-img img-thumbnail img-fluid mb-3"
+                         alt="{{ produit.title }}"/>
+                </div>
+
+                <div class="liens text-center">
+                    <div class="lien-decitre">
+                        <a href="https://www.decitre.fr/{{ produit.ean }}.html">
+                            <i class="dct-icon-link"></i> Voir sur Decitre.fr
+                        </a>
+                    </div>
+
+                    {% if donneesOrb.excerpts is defined and donneesOrb.excerpts is not empty %}
+                        <div class="lien-feuilletage-orb">
+                            <a href="{{ donneesOrb.excerpts[0].src }}">
+                                <i class="dct-icon-link"></i> Feuilleter
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <div class="lien-orb">
+                        <a href="https://www.base-orb.fr/product/{{ produit.ean }}/show/">
+                            <i class="dct-icon-link"></i> Voir sur ORB
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {# Informations principales #}
+            <div class="col-lg-6 informations-principales">
+                <div class="inner shadow-sm pt-3 pb-0 px-0 mb-2">
+                    <h3 class="px-3 pb-2">
+                        {{ produit.title }}
+                    </h3>
+
+                    {% if produit.libelleFamille is not null %}
+                        <div class="familles py-1 px-2">
+                            {{ produit.libelleFamille|capitalize }}
+                            {{ produit.libelleSousFamille is not null ? ' > ' ~ produit.libelleSousFamille|capitalize : '' }}
+                            {{ produit.libelleSousSousFamille is not null ? ' > ' ~ produit.libelleSousSousFamille|capitalize : '' }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="caracteristiques mt-3">
+                    <div class="card">
+                        <div class="card-header font-weight-bold">
+                            Caractéristiques
+                        </div>
+                        <div class="card-body pt-2 pb-1">
+                            <ul class="pl-3">
+                                <li>
+                                    <span class="ean mr-3"><strong>EAN</strong>: {{ produit.ean }}</span>
+                                    {% if produit.isbn is not null %}
+                                        <span class="isbn"><strong>ISBN / ISMN</strong>: {{ produit.isbn }}</span>
+                                    {% endif %}
+                                </li>
+                                {% if produit.dateParution is not null %}
+                                    <li>
+                                        <strong>{{ produit.isParu ? 'Paru' : 'A paraitre' }}</strong>
+                                        le {{ produit.dateParution|date('d/m/Y') }}
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <strong>
+                                        Auteur{{ produit.auteurs is not empty and produit.auteurs|length > 1 ? 's' : '' }}
+                                    </strong>:
+                                    {% if produit.auteurs is not empty %}
+                                        {% for auteur in produit.auteurs %}
+                                            {{ auteur.nom|default('') ~ ' ' ~ auteur.prenom|default('') }}
+                                            {% if auteur.fonction is not null %}
+                                                <span class="font-italic">({{ auteur.fonction }})</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </li>
+                                <li><strong>Fournisseur</strong>: {{ produit.nomFournisseur|default('N/A') }}
+                                    {% if produit.codeFournisseur is not null %}
+                                        ({{ produit.codeFournisseur }})
+                                    {% endif %}
+                                </li>
+                                <li><strong>Editeur</strong>: {{ produit.nomEditeur|default('N/A') }}
+                                    {% if produit.codeEditeur is not null %}
+                                        ({{ produit.codeEditeur|trim }})
+                                    {% endif %}
+                                </li>
+                                <li><strong>Série / Revue</strong>: {{ produit.libelleSerie|default('N/A') }}</li>
+                                <li><strong>Collection</strong>: {{ produit.libelleCollection|default('N/A') }}</li>
+                                <li><strong>Mention édition</strong>: {{ produit.libelleEdition|default('N/A') }}</li>
+                                <li>
+                                    <strong>
+                                        Marque éditoriale
+                                    </strong>: {{ produit.libelleMarqueEditioriale|default('N/A') }}
+                                </li>
+                            </ul>
+
+                            <div class="presentation">
+                                <table class="table table-sm">
+                                    <thead>
+                                    <tr>
+                                        <th>Format</th>
+                                        <th>Présentation</th>
+                                        <th>Dimensions (H x L x E)</th>
+                                        <th>Poids</th>
+                                        <th>Pages</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>{{ produit.libelleFormat|default('N/A') }}</td>
+                                        <td>{{ produit.libellePresentation|default('N/A') }}</td>
+                                        <td>
+                                            {% if produit.hauteur is not null and produit.largeur is not null and
+                                                produit.epaisseur is not null %}
+                                                {{ produit.hauteur }}cm x {{ produit.largeur }}cm x {{ produit.epaisseur }}cm
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ produit.poids ? produit.poids ~ 'Kg' : 'N/A' }}
+                                        </td>
+                                        <td>{{ produit.nombrePages|default('N/A') }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Prix et disponibilité #}
+            <div class="col-lg-3">
+                <div class="prix shadow-sm text-center py-3 mb-4">
+                    <div class="ttc">
+                        {% if produit.priceAllTaxesIncluded is not null %}
+                            {{ produit.priceAllTaxesIncluded|number_format(2) }}€ TTC
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </div>
+                    <div class="tva">
+                        TVA {{ produit.libelleTauxTva|default('N/A') }}
+                    </div>
+                </div>
+                <div class="disponibilite mb-4">
+                    <div class="shadow-sm text-center py-1">
+                        <table class="table table-sm table-borderless">
+                            <thead>
+                            <tr>
+                                <th colspan="2">Disponibilité</th>
+                            </tr>
+                            <tr>
+                                <th>Fournisseur</th>
+                                <th>Dilicom</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    {% if produit.libelleDisponibiliteFournisseur is not null %}
+                                        {{ produit.libelleDisponibiliteFournisseur }}<br/>
+                                        <p class="m-0">
+                                            <small>
+                                                MAJ le {{ produit.dateMajDisponibiliteFournisseur|date('d/m/Y') }}
+                                            </small>
+                                        </p>
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if produit.libelleDisponibiliteDilicom is not null %}
+                                        {{ produit.libelleDisponibiliteDilicom }}<br/>
+                                        <p class="m-0">
+                                            <small>
+                                                MAJ le {{ produit.dateMajDisponibiliteDilicom|date('d/m/Y') }}
+                                            </small>
+                                        </p>
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <div class="text-center py-3">
+                        <a class="dct-button dct-button-add-to-basket disabled">
+                            Commander
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if produit.resume is not null %}
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="card card--resume">
+                        <div class="card-header font-weight-bold">
+                            Résumé
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ produit.resume|nl2br }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if produit.biographie is not null %}
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="card card--biographie">
+                        <div class="card-header font-weight-bold">
+                            Biographie
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ produit.biographie|nl2br }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

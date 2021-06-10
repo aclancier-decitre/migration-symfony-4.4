@@ -1,0 +1,41 @@
+<div class="row mt-2">
+    <div class="col-md-4 col-xl-3 product-search-filters-container">
+        <div class="product-search-filters p-3">
+            <h4 class="d-flex align-items-center pb-3">
+                <small><i class="dct-icon-sort mr-2"></i></small> Trier les résultats
+            </h4>
+
+            {% include '@DecitreProduct/search/_order-by.html.twig' %}
+
+            <h4 class="d-flex align-items-center pb-3 mt-3">
+                <small><i class="dct-icon-filter mr-2"></i></small> Filtres
+            </h4>
+            {% include '@DecitreProduct/search/_is-french.html.twig' %}
+            {% include '@DecitreProduct/search/_facets.html.twig' %}
+            {% include '@DecitreProduct/search/_price-filter.html.twig' %}
+        </div>
+    </div>
+    <div class="col-md-8 col-xl-9 product-list">
+        {% if paginator %}
+            {% include '@DecitreCore/pagination/_pagination.html.twig' with {
+                'data': productSearchResults,
+                'paginator': paginator,
+                'choices' : [10, 25, 50, 100]
+            } %}
+        {% endif %}
+
+        {% for product in productSearchResults %}
+            {% include '@DecitreProduct/search/_product.html.twig' %}
+        {% endfor %}
+    </div>
+</div>
+
+{% if productSearchResults|length >= 5 and paginator %}
+    <div class="row">
+        <div class="col-12 d-flex mt-3">
+            {% include '@DecitreCore/pagination/navigation.html.twig' with {
+                'paginator': paginator
+            } %}
+        </div>
+    </div>
+{% endif %}

@@ -4,7 +4,7 @@ namespace App\Controller\ProductController;
 
 use App\Form\ProductForm\DecitreWebSearchType;
 use App\Form\ProductForm\GetProductType;
-use App\Services\Http\BinaryTempFileResponse;
+use App\Service\Http\BinaryTempFileResponse;
 use App\Repository\ProductRepository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ProductRepository\OrbProductRepository;
-use App\Services\Exception\DatabaseActionException;
+use App\Service\Exception\DatabaseActionException;
 
 /**
  * @Route("/product", name="decitre_")
@@ -29,12 +29,12 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/", name="product_homepage")
-     * @param string $title
-     * @param string $action
      * @return Response
      */
-    public function indexAction(string $title, string $action): Response
+    public function indexAction(): Response
     {
+        $title = 'title';
+        $action = 'action';
         $getProductForm = $this->createForm(GetProductType::class, null);
 
         return $this->render(
@@ -127,7 +127,7 @@ class ProductController extends AbstractController
         try {
             $donneesOrb = $orbProductRepository->getProduct($ean);
         } catch (\Exception $e) {
-            $this->get('ekino.new_relic.interactor')->noticeException($e);
+            // $this->get('ekino.new_relic.interactor')->noticeException($e);
             $this->addFlash('warning', 'Impossible de récupérer les données ORB');
         }
 
@@ -154,12 +154,12 @@ class ProductController extends AbstractController
             if ($e instanceof DatabaseActionException) {
                 $message = $e->getMessage();
             }
-            $this->get('ekino.new_relic.interactor')->noticeException($e);
+            // $this->get('ekino.new_relic.interactor')->noticeException($e);
             $this->addFlash('error', $message);
             return $this->redirectToRoute('decitre_product_search_index');
         }
 
-        return $this->render('@DecitreProduct/fiche/index.html.twig', [
+        return $this->render('product_templates/fiche/index.html.twig', [
             'produit' => $produit,
             'donneesOrb' => $donneesOrb,
         ]);

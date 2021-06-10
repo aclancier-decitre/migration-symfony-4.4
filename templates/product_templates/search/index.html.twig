@@ -1,0 +1,40 @@
+{% extends app.request.xmlHttpRequest ? 'base_modal.html.twig' : '::base.html.twig' %}
+{% set modalSize = 'extra-large' %}
+
+{% block title %}Recherche produit{% endblock %}
+{% block application_page_class %}full-height-page product-search{% endblock %}
+{% set modalClass = 'product-search product-search-modal' %}
+
+{% block body %}
+    <div class="product-search-form pt-3 {% if not app.request.xmlHttpRequest %}mt-2{% endif %}">
+        <div class="form-container py-2 px-4 pb-3">
+            {% include '@DecitreProduct/search/_form.html.twig' %}
+        </div>
+    </div>
+
+    {% if form.vars.submitted and form.vars.valid %}
+        {% if productSearchResults is not empty %}
+            <div class="row">
+                <div class="col product-search-result-container py-3">
+                    {% if app.request.xmlHttpRequest %}
+                        {% include '@DecitreProduct/search/_result-compact.html.twig' %}
+                    {% else %}
+                        {% include '@DecitreProduct/search/_result-full.html.twig' %}
+                    {% endif %}
+                </div>
+            </div>
+        {% elseif not hideProductsNotFoundNotice %}
+            <div class="dct-alert-notice mt-0">
+                Aucun produit ne correspond à vos critères de recherche.
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var productSearch = new ProductSearch();
+        var familySelect = new FamiliesWithSub();
+    </script>
+{% endblock %}

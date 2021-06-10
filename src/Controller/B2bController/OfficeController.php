@@ -8,7 +8,6 @@ use App\Form\B2bForm\CalendrierFamillesType;
 use App\Form\B2bForm\DeliveryB2BType;
 use App\Form\B2bForm\PeriodeType;
 use App\Repository\B2bRepository\OfficeWebService;
-use Decitre\Bundle\CoreBundle\Tools\FormHelper;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,23 +18,30 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+
+/**
+ * @Route("/b2b", name="decitre_b2b_")
+ */
 class OfficeController extends AbstractController
 {
+
     /**
+     * @Route("/", name="select_app")
      * @return Response
      */
-    public function selectAppAction()
+    public function selectAppAction(): Response
     {
         return $this->render('DecitreB2bBundle:SelectApp:home.html.twig');
     }
 
     /**
-     * @Route("/creation-commande", name="decitre_b2b_creation_commande_office")
+     * @Route("/creation-commande", name="creation_commande_office")
      * @param OfficeWebService $officeWebService
      * @return Response
      * @throws Exception
      */
-    public function indexAction(OfficeWebService $officeWebService)
+    public function indexAction(OfficeWebService $officeWebService): Response
     {
         $clientsArray = $officeWebService->getClientsB2b();
         return $this->render(
@@ -47,10 +53,11 @@ class OfficeController extends AbstractController
     }
 
     /**
+     * @Route("/calendriers/client/{clientId}", name="calendriers_show_offices", methods={"GET"}, requirements={"clientId"="\d+"})
      * @param string $clientId
      * @return Response
      */
-    public function showOfficesAction(string $clientId)
+    public function showOfficesAction(string $clientId): Response
     {
         $client = $this->get('client.repository')->getClient($clientId);
         $calendriers = $this->get('office.b2b.repository')->getCalendriersClient($client);
