@@ -1,11 +1,11 @@
-{% extends "DecitreB2bBundle::base.html.twig" %}
+{% extends "b2b_templates/base.html.twig" %}
 
 {% block title %} Correction d'une livraison  {% endblock %}
 
 {% block body %}
 
 
-    {% include "DecitreCoreBundle:_common:messages.html.twig" with {'messages': messages} %}
+    {% include "core_templates/_common/messages.html.twig" with {'messages': messages} %}
 
     <form method="GET" action="{{ path('decitre_b2b_correction_livraison')}}">
         <div class="col-12 form-group">
@@ -23,7 +23,7 @@
     </form>
 
     {% if delivery %}
-        {% include "DecitreB2bBundle:CorrectionLivraison:products-table.html.twig" %}
+        {% include "products-table.html.twig" %}
     {% endif %}
 
 {% endblock %}

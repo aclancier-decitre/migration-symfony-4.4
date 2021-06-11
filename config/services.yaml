@@ -70,6 +70,7 @@ services:
             $username: '%api_orb_username%'
             $apiKey: '%api_orb_password%'
 
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     GuzzleHttp\Client: ~
@@ -80,3 +81,4 @@ services:
     App\Entity\B2bEntity\FamilleFactory: ~
     App\Entity\B2bEntity\PeriodeFactory: ~
     App\Entity\CoreEntity\MappingFactory: ~
+    App\Entity\ClientEntity\ClientFactory: ~

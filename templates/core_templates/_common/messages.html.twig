@@ -1,0 +1,12 @@
+{% if type is defined and type is not empty %}
+    {% set associativeMessages = false %}
+{% else %}
+    {% set associativeMessages = true %}
+{% endif %}
+
+{% for message in messages %}
+    <div class="dct-alert-{{ associativeMessages ? message.type : type }}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ associativeMessages ? message.message|raw : message|raw }}
+    </div>
+{% endfor %}

@@ -1,0 +1,6 @@
+{% for type in ['success', 'notice', 'warning', 'error'] %}
+    {% include 'messages.html.twig' with {
+        messages: app.session.flashbag.get(type),
+        type: type
+    } only %}
+{% endfor %}

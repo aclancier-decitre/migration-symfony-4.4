@@ -1,0 +1,37 @@
+<div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="{{ name }}">
+    {{ form_start(form, {'attr' : {
+        'method' : method ?? 'POST',
+        'action' : action,
+        'class': 'ajax-submit-form',
+        'data-success-callback': successCallback is defined ? successCallback : null,
+        'data-fail-callback': failCallback is defined ? failCallback : null
+    }}) }}
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ name }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="error alert alert-danger">{{ form_errors(form) }}</div>
+                {% for element in form.children  %}
+                    <div class="form-group">
+                        {{ form_row(element) }}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="dct-button dct-button-cancel" data-dismiss="modal">
+                    Fermer
+                </button>
+                <button type="submit" class="submit dct-button dct-button-confirm">
+                    Valider
+                </button>
+            </div>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+</div>

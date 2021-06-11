@@ -17,7 +17,7 @@ use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
-
+use App\Repository\RepriseRepository\WebService;
 
 
 /**
@@ -26,13 +26,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class OfficeController extends AbstractController
 {
 
+    private WebService $webService;
+
+    public function __construct(WebService $webService)
+    {
+        $this->webService = $webService;
+    }
+
     /**
      * @Route("/", name="select_app")
      * @return Response
      */
     public function selectAppAction(): Response
     {
-        return $this->render('DecitreB2bBundle:SelectApp:home.html.twig');
+        return $this->render('b2b_templates/SelectApp/home.html.twig');
     }
 
     /**
@@ -59,7 +66,7 @@ class OfficeController extends AbstractController
      */
     public function showOfficesAction(string $clientId): Response
     {
-        $client = $this->get('client.repository')->getClient($clientId);
+        $client = $this->webService->getClient($clientId);
         $calendriers = $this->get('office.b2b.repository')->getCalendriersClient($client);
         $mappingFamilles = $this->get('decitre.mapping.codes')->getListMappingByType("famille");
         $familles = $this->get('office.b2b.famillefactory')->createFromArray($mappingFamilles);
@@ -262,10 +269,11 @@ class OfficeController extends AbstractController
     }
 
     /**
+     * @Route("/correction-livraison", name="correction_livraison")
      * @param Request $request
      * @return Response
      */
-    public function getProduitsLivraisonACorrigerAction(Request $request)
+    public function getProduitsLivraisonACorrigerAction(Request $request): Response
     {
         $delivery = $messages = [];
         $deliveryForm = null;
@@ -307,7 +315,7 @@ class OfficeController extends AbstractController
         }
 
         return $this->render(
-            'DecitreB2bBundle:CorrectionLivraison:home.html.twig',
+            'b2b_templates/CorrectionLivraison/home.html.twig',
             [
                 'delivery' => $delivery,
                 'deliveryId' => $deliveryId,

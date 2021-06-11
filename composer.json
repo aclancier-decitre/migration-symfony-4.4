@@ -17,6 +17,7 @@
         "guzzlehttp/log-subscriber": "~1.0",
         "guzzlehttp/streams": "3.0",
         "knplabs/knp-paginator-bundle": "^5.4",
+        "jms/serializer-bundle": "^2.0",
         "league/commonmark": "^0.18.3",
         "mpdf/mpdf": "^8.0",
         "phpdocumentor/reflection-docblock": "^5.2",
